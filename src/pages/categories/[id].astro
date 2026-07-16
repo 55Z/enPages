@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import { getCategories, getProductsForCategory } from '../../lib/catalog';
+import { siteConfig } from '../../lib/site-config';
+
+export async function getStaticPaths() {
+  const categories = await getCategories();
+  return categories.map((category) => ({ params: { id: category.id }, props: { category } }));
+}
+
+const { category } = Astro.props;
+const categories = await getCategories();
+const categoryMap = new Map(categories.map((item) => [item.id, item]));
+const products = await getProductsForCategory(category.id);
+const description = `Browse products published in the ${category.name} category.`;
+---
+
+<BaseLayout title={`${category.name} | ${siteConfig.siteName}`} description={description} image={category.imageUrl}>
+  <section class="page-hero container">
+    <a class="eyebrow" href="/products/">Products</a>
+    <h1>{category.name}</h1>
+    <p>{description}</p>
+  </section>
+  <section class="container section section-topless">
+    {products.length
+      ? <div class="product-grid">{products.map((product) => <ProductCard product={product} category={categoryMap.get(product.categoryId)} />)}</div>
+      : <p>No published products are available in this category yet.</p>}
+  </section>
+</BaseLayout>

@@ -1,0 +1,105 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ContactOptions from '../../components/ContactOptions.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import { getCategories, getProducts } from '../../lib/catalog';
+import { formatPrice, siteConfig } from '../../lib/site-config';
+
+export async function getStaticPaths() {
+  const products = await getProducts();
+  return products.map((product) => ({ params: { id: product.id }, props: { product } }));
+}
+
+const { product } = Astro.props;
+const categories = await getCategories();
+const category = categories.find((item) => item.id === product.categoryId);
+const products = await getProducts();
+const related = products
+  .filter((item) => item.categoryId === product.categoryId && item.id !== product.id)
+  .slice(0, 3);
+const specifications = product.skus.flatMap((sku) => sku.specifications);
+const uniqueSpecifications = specifications.filter(
+  (specification, index, list) =>
+    list.findIndex((item) => item.name === specification.name && item.value === specification.value) === index
+);
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: product.name,
+  sku: product.id,
+  description: product.introduction,
+  image: product.imageUrls,
+  ...(siteConfig.showPrice
+    ? {
+        offers: {
+          '@type': 'Offer',
+          price: (product.price / 100).toFixed(2),
+          priceCurrency: siteConfig.currency,
+          availability: 'https://schema.org/InStock'
+        }
+      }
+    : {})
+};
+---
+
+<BaseLayout title={`${product.name} | ${siteConfig.siteName}`} description={product.introduction} image={product.coverImageUrl}>
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
+  <section class="container breadcrumb">
+    <a href="/products/">Products</a>
+    <span>/</span>
+    {category && <><a href={`/categories/${category.id}/`}>{category.name}</a><span>/</span></>}
+    <span>{product.name}</span>
+  </section>
+  <section class="container product-detail">
+    <div class="product-gallery">
+      <img src={product.coverImageUrl} alt={product.name} fetchpriority="high" />
+      {product.imageUrls.slice(1).map((url) => <img src={url} alt={`${product.name} product view`} loading="lazy" />)}
+    </div>
+    <div class="product-summary">
+      {category && <a class="eyebrow" href={`/categories/${category.id}/`}>{category.name}</a>}
+      <h1>{product.name}</h1>
+      <p class="product-code">Product ID: {product.id}</p>
+      {siteConfig.showPrice && (
+        <div class="product-detail-price">
+          <strong>{formatPrice(product.price)}</strong>
+          {product.marketPrice && product.marketPrice > product.price && <del>{formatPrice(product.marketPrice)}</del>}
+        </div>
+      )}
+      {product.introduction && <p class="lead">{product.introduction}</p>}
+      <a class="button" href="#contact">Contact us about this product</a>
+    </div>
+  </section>
+  <section class="container detail-grid section">
+    <article class="rich-content">
+      {product.descriptionHtml
+        ? <Fragment set:html={product.descriptionHtml} />
+        : <p>Contact our team for complete product information.</p>}
+    </article>
+    <aside class="specification-card">
+      <h2>Specifications</h2>
+      {uniqueSpecifications.length > 0
+        ? <dl>{uniqueSpecifications.map((spec) => <><dt>{spec.name}</dt><dd>{spec.value}</dd></>)}</dl>
+        : <p>Contact us to confirm available specifications and packaging options.</p>}
+    </aside>
+  </section>
+  <section id="contact" class="section section-muted">
+    <div class="container inquiry-layout">
+      <div>
+        <p class="eyebrow">Product information</p>
+        <h2>Ask about this product.</h2>
+        <p>The product name and ID are included automatically when you use the email link.</p>
+      </div>
+      <ContactOptions product={{ id: product.id, name: product.name }} />
+    </div>
+  </section>
+  {related.length > 0 && (
+    <section class="section container">
+      <div class="section-heading">
+        <div><p class="eyebrow">Related products</p><h2>Explore more products.</h2></div>
+      </div>
+      <div class="product-grid">
+        {related.map((item) => <ProductCard product={item} category={category} />)}
+      </div>
+    </section>
+  )}
+</BaseLayout>

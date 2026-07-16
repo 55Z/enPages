@@ -1,0 +1,67 @@
+---
+import '../styles/global.css';
+import { phoneHref, siteConfig } from '../lib/site-config';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+}
+
+const {
+  title = `${siteConfig.siteName} | Product Catalog`,
+  description = 'Explore our product catalog and contact our team for more information.',
+  image
+} = Astro.props;
+const canonical = new URL(Astro.url.pathname, import.meta.env.PUBLIC_SITE_URL || Astro.url.origin).href;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    {image && <meta property="og:image" content={image} />}
+    <title>{title}</title>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container nav-wrap">
+        <a class="brand" href="/" aria-label={`${siteConfig.siteName} home`}>{siteConfig.siteName}<span>.</span></a>
+        <nav aria-label="Primary navigation">
+          <a href="/products/">Products</a>
+          <a href="/about/">About</a>
+          <a class="button button-small" href="/contact/">Contact Us</a>
+        </nav>
+      </div>
+    </header>
+    <main><slot /></main>
+    <footer class="site-footer">
+      <div class="container footer-grid">
+        <div>
+          <a class="brand" href="/">{siteConfig.siteName}<span>.</span></a>
+          <p>Product information and direct support for international customers.</p>
+        </div>
+        <div>
+          <h2>Explore</h2>
+          <a href="/products/">All products</a>
+          <a href="/about/">About us</a>
+          <a href="/contact/">Contact</a>
+        </div>
+        <div>
+          <h2>Contact</h2>
+          {siteConfig.contactEmail && <a href={`mailto:${siteConfig.contactEmail}`}>{siteConfig.contactEmail}</a>}
+          {siteConfig.contactPhone && <a href={phoneHref(siteConfig.contactPhone)}>{siteConfig.contactPhone}</a>}
+          <a href="/privacy/">Privacy</a>
+        </div>
+      </div>
+      <div class="container footer-bottom">© {new Date().getFullYear()} {siteConfig.siteName}. All rights reserved.</div>
+    </footer>
+  </body>
+</html>

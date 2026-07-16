@@ -1,0 +1,72 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProductCard from '../components/ProductCard.astro';
+import { getCategories, getProducts } from '../lib/catalog';
+import { siteConfig } from '../lib/site-config';
+
+const [products, categories] = await Promise.all([getProducts(), getCategories()]);
+const categoryMap = new Map(categories.map((category) => [category.id, category]));
+const topLevelCategories = categories.filter((category) => category.parentId === null);
+const visibleCategories = topLevelCategories.length ? topLevelCategories : categories;
+const featuredProducts = products.slice(0, 3);
+---
+
+<BaseLayout
+  title={`${siteConfig.siteName} | Product Catalog`}
+  description="Explore our current product catalog and contact our team for product information."
+>
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <p class="eyebrow">Product catalog</p>
+        <h1>Explore products for your market and requirements.</h1>
+        <p class="hero-copy">Browse published products, review available details, and contact our team directly for more information.</p>
+        <div class="hero-actions">
+          <a class="button" href="/products/">Explore products</a>
+          <a class="button button-quiet" href="/contact/">Contact us</a>
+        </div>
+      </div>
+      <div class="hero-panel">
+        <span>01</span>
+        <p>Published product information</p>
+        <span>02</span>
+        <p>Direct contact options</p>
+        <span>03</span>
+        <p>Fast global delivery</p>
+      </div>
+    </div>
+  </section>
+
+  {visibleCategories.length > 0 && (
+    <section class="section container">
+      <div class="section-heading">
+        <div><p class="eyebrow">Product categories</p><h2>Browse by category.</h2></div>
+        <a class="text-link" href="/products/">View all products <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="category-grid">
+        {visibleCategories.map((category) => (
+          <a class="category-card" href={`/categories/${category.id}/`}>
+            {category.imageUrl && <img src={category.imageUrl} alt="" loading="lazy" />}
+            <span>{category.name}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  {featuredProducts.length > 0 && (
+    <section class="section section-muted">
+      <div class="container">
+        <div class="section-heading"><div><p class="eyebrow">Selected products</p><h2>Current catalog highlights.</h2></div></div>
+        <div class="product-grid">
+          {featuredProducts.map((product) => <ProductCard product={product} category={categoryMap.get(product.categoryId)} />)}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="section container split-callout">
+    <div><p class="eyebrow">Product information</p><h2>Need more details about a product?</h2></div>
+    <div><p>Contact our team with the product name or product ID and your requirements.</p><a class="button" href="/contact/">Contact us</a></div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,18 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { siteConfig } from '../lib/site-config';
+---
+
+<BaseLayout title={`Privacy | ${siteConfig.siteName}`} description={`Privacy information for ${siteConfig.siteName} website visitors.`}>
+  <section class="page-hero container">
+    <p class="eyebrow">Privacy</p>
+    <h1>Privacy notice</h1>
+    <p>This website provides product information and direct contact links.</p>
+  </section>
+  <section class="container section prose">
+    <h2>Contact communication</h2>
+    <p>If you contact us by email, telephone or another external service, the information you provide is handled through that communication channel so our team can respond.</p>
+    <h2>Website operation</h2>
+    <p>This product catalog does not currently provide account registration, online ordering or an online inquiry submission form.</p>
+  </section>
+</BaseLayout>

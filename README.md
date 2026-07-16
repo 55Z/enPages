@@ -1,42 +1,39 @@
-# enPages
+# DQXDAO English Product Catalog
 
-This template should help get you started developing with Vue 3 in Vite.
+Astro static product catalog for `www.fooddqxdao.com`.
 
-## Recommended IDE Setup
+## Data source
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+The site loads published products during the build from the existing RuoYi App API:
 
-## Recommended Browser Setup
+- `/app-api/product/category/list`
+- `/app-api/product/spu/page`
+- `/app-api/product/spu/get-detail`
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+Requests use tenant ID `163` by default. Build environment variables can override all site settings; see `.env.example`.
 
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
+## Commands
 
 ```sh
 npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
+npm run check
 npm run build
+npm run preview
+```
+
+The static output is generated in `dist`.
+
+## Cloudflare
+
+The repository can be connected directly to Cloudflare Workers Builds or Cloudflare Pages:
+
+```text
+Build command: npm run build
+Output directory: dist
+```
+
+For Workers Static Assets, `wrangler.jsonc` is included and deployment can be verified with:
+
+```sh
+npm run deploy
 ```

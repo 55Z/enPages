@@ -1,0 +1,34 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import ProductSearch from '../../components/ProductSearch.astro';
+import { getCategories, getProducts } from '../../lib/catalog';
+import { siteConfig } from '../../lib/site-config';
+
+const [products, categories] = await Promise.all([getProducts(), getCategories()]);
+const categoryMap = new Map(categories.map((category) => [category.id, category]));
+---
+
+<BaseLayout title={`Products | ${siteConfig.siteName}`} description={`Browse the ${siteConfig.siteName} product catalog.`}>
+  <section class="page-hero container">
+    <p class="eyebrow">Catalog</p>
+    <h1>Browse our published products.</h1>
+    <p>Search by product name, description, category or product ID.</p>
+  </section>
+  <section class="container section section-topless">
+    <ProductSearch />
+    <div class="category-pills" aria-label="Product categories">
+      <a href="/products/">All</a>
+      {categories.map((category) => <a href={`/categories/${category.id}/`}>{category.name}</a>)}
+    </div>
+    {products.length > 0 ? (
+      <div class="product-grid">
+        {products.map((product) => (
+          <div data-product-card data-search={`${product.id} ${product.name} ${product.introduction} ${categoryMap.get(product.categoryId)?.name || ''}`.toLowerCase()}>
+            <ProductCard product={product} category={categoryMap.get(product.categoryId)} />
+          </div>
+        ))}
+      </div>
+    ) : <p>No published products are available yet.</p>}
+  </section>
+</BaseLayout>

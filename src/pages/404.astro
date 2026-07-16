@@ -1,0 +1,13 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { siteConfig } from '../lib/site-config';
+---
+
+<BaseLayout title={`Page not found | ${siteConfig.siteName}`} description="The requested page could not be found.">
+  <section class="page-hero container">
+    <p class="eyebrow">404</p>
+    <h1>That page is not available.</h1>
+    <p>The product may no longer be published, or the link may be outdated.</p>
+    <a class="button" href="/products/">Browse products</a>
+  </section>
+</BaseLayout>

@@ -1,0 +1,18 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { siteConfig } from '../lib/site-config';
+---
+
+<BaseLayout title={`About | ${siteConfig.siteName}`} description={`Learn more about ${siteConfig.siteName}.`}>
+  <section class="page-hero container">
+    <p class="eyebrow">About {siteConfig.siteName}</p>
+    <h1>Clear product information and direct communication.</h1>
+    <p>Our public catalog presents the products currently published by our operations team.</p>
+  </section>
+  <section class="container section prose">
+    <h2>Product catalog</h2>
+    <p>Product names, categories, images and descriptions are maintained through our internal product management system and published to this website.</p>
+    <h2>Contacting us</h2>
+    <p>When contacting our team, include the product name or product ID so we can respond with the right context.</p>
+  </section>
+</BaseLayout>

@@ -1,30 +1,23 @@
 {
-  "name": "enpages",
-  "version": "0.0.0",
+  "name": "dqxd-mall-en",
   "private": true,
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "run-p type-check \"build-only {@}\" --",
-    "preview": "vite preview",
-    "build-only": "vite build",
-    "type-check": "vue-tsc --build"
+    "dev": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "deploy": "wrangler deploy"
   },
   "dependencies": {
-    "vue": "^3.5.32"
+    "@astrojs/sitemap": "^3.6.0",
+    "astro": "^5.16.0",
+    "zod": "^3.24.0"
   },
   "devDependencies": {
-    "@tsconfig/node24": "^24.0.4",
-    "@types/node": "^24.12.2",
-    "@vitejs/plugin-vue": "^6.0.6",
-    "@vue/tsconfig": "^0.9.1",
-    "npm-run-all2": "^8.0.4",
-    "typescript": "~6.0.0",
-    "vite": "^8.0.8",
-    "vite-plugin-vue-devtools": "^8.1.1",
-    "vue-tsc": "^3.2.6"
-  },
-  "engines": {
-    "node": "^20.19.0 || >=22.12.0"
+    "@astrojs/check": "^0.9.4",
+    "typescript": "^5.9.0",
+    "wrangler": "^4.27.0"
   }
 }

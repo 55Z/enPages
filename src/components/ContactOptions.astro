@@ -1,0 +1,33 @@
+---
+import { inquiryEmailHref, phoneHref, siteConfig } from '../lib/site-config';
+
+interface Props {
+  product?: {
+    id: string;
+    name: string;
+  };
+}
+
+const { product } = Astro.props;
+---
+
+<div class="contact-options">
+  {siteConfig.contactEmail && (
+    <a class="contact-option" href={inquiryEmailHref(product)}>
+      <span>Email</span>
+      <strong>{siteConfig.contactEmail}</strong>
+    </a>
+  )}
+  {siteConfig.contactPhone && (
+    <a class="contact-option" href={phoneHref(siteConfig.contactPhone)}>
+      <span>Phone</span>
+      <strong>{siteConfig.contactPhone}</strong>
+    </a>
+  )}
+  {siteConfig.whatsappUrl && (
+    <a class="contact-option" href={siteConfig.whatsappUrl} target="_blank" rel="noopener noreferrer">
+      <span>WhatsApp</span>
+      <strong>Start a conversation</strong>
+    </a>
+  )}
+</div>

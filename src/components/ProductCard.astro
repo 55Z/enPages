@@ -1,0 +1,24 @@
+---
+import type { SiteCategory, SiteProduct } from '../lib/schema';
+import { formatPrice, siteConfig } from '../lib/site-config';
+
+interface Props {
+  product: SiteProduct;
+  category?: SiteCategory;
+}
+
+const { product, category } = Astro.props;
+---
+
+<article class="product-card">
+  <a href={`/products/${product.id}/`} class="product-card-image">
+    <img src={product.coverImageUrl} alt={product.name} loading="lazy" />
+  </a>
+  <div class="product-card-body">
+    {category && <a class="eyebrow" href={`/categories/${category.id}/`}>{category.name}</a>}
+    <h2><a href={`/products/${product.id}/`}>{product.name}</a></h2>
+    <p>{product.introduction}</p>
+    {siteConfig.showPrice && <p class="product-price">{formatPrice(product.price)}</p>}
+    <a class="text-link" href={`/products/${product.id}/`}>View product <span aria-hidden="true">→</span></a>
+  </div>
+</article>

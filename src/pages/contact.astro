@@ -1,0 +1,20 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ContactOptions from '../components/ContactOptions.astro';
+import { siteConfig } from '../lib/site-config';
+---
+
+<BaseLayout title={`Contact | ${siteConfig.siteName}`} description={`Contact the ${siteConfig.siteName} team for product information.`}>
+  <section class="page-hero container">
+    <p class="eyebrow">Contact</p>
+    <h1>Contact our team.</h1>
+    <p>Share the product name or product ID together with your requirements.</p>
+  </section>
+  <section class="container section inquiry-layout section-topless">
+    <div>
+      <h2>Direct contact</h2>
+      <p>Choose any available contact method. WhatsApp will appear automatically after its URL is configured.</p>
+    </div>
+    <ContactOptions />
+  </section>
+</BaseLayout>
